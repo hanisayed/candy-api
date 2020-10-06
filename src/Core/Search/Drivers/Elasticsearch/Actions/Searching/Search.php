@@ -16,6 +16,15 @@ use GetCandy\Api\Http\Resources\Categories\CategoryCollection;
 class Search extends Action
 {
     /**
+     * @var array
+     */
+    protected $topFilters = [
+        'channel-filter',
+        'customer-group-filter',
+        'category-filter',
+    ];
+
+    /**
      * Determine if the user is authorized to make this action.
      *
      * @return bool
@@ -37,7 +46,7 @@ class Search extends Action
             'limit' => 'nullable|numeric',
             'offset' => 'nullable|numeric',
             'type' => 'nullable|string',
-            'facets' => 'nullable|array',
+            'filters' => 'nullable|array',
             'aggregate' => 'nullable|array',
             'term' => 'nullable|string',
             'language' => 'nullable|string',
@@ -59,6 +68,8 @@ class Search extends Action
         $client = FetchClient::run();
 
         $term = $this->term ? FetchTerm::run($this->attributes) : null;
+        $filters = $this->delegateTo(FetchFilters::class);
+
 
         $query = new Query();
         $query->setParam('size', $this->limit ?: 100);
@@ -79,37 +90,37 @@ class Search extends Action
         //     $this->getExcludedFields()
         // );
 
-        // // Set filters as post filters
-        // $postFilter = new BoolQuery;
+        // Set filters as post filters
+        $postFilter = new BoolQuery;
 
-        // $preFilters = $this->filters->filter(function ($filter) {
-        //     return in_array($filter['handle'], $this->topFilters);
-        // });
+        $preFilters = $filters->filter(function ($filter) {
+            return in_array($filter->handle, $this->topFilters);
+        });
 
         // $preFilters->each(function ($filter) use ($boolQuery) {
         //     $boolQuery->addFilter(
-        //         $filter['filter']->getQuery()
+        //         $filter->getQuery()
         //     );
         // });
 
-        // $postFilters = $this->filters->filter(function ($filter) {
-        //     return ! in_array($filter['handle'], $this->topFilters);
-        // });
+        $postFilters = $filters->filter(function ($filter) {
+            return ! in_array($filter->handle, $this->topFilters);
+        });
 
-        // $postFilters->each(function ($filter) use ($postFilter, $query) {
-        //     if (method_exists($filter['filter'], 'aggregate')) {
-        //         $query->addAggregation(
-        //             $filter['filter']->aggregate()->getPost(
-        //                 $filter['filter']->getValue()
-        //             )
-        //         );
-        //     }
-        //     $postFilter->addFilter(
-        //         $filter['filter']->getQuery()
-        //     );
-        // });
+        $postFilters->each(function ($filter) use ($postFilter, $query) {
+            if (method_exists($filter, 'aggregate')) {
+                $query->addAggregation(
+                    $filter->aggregate()->getPost(
+                        $filter->getValue()
+                    )
+                );
+            }
+            $postFilter->addFilter(
+                $filter->getQuery()
+            );
+        });
 
-        // $query->setPostFilter($postFilter);
+        $query->setPostFilter($postFilter);
 
         // // $globalAggregation = new \Elastica\Aggregation\GlobalAggregation('all_products');
         // foreach ($this->aggregations as $agg) {

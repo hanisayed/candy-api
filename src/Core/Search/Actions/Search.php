@@ -38,10 +38,6 @@ class Search extends Action
     public function handle(SearchManagerContract $search)
     {
         $driver = $search->with($this->driver);
-
-        if ($this->runningAs('controller')) {
-            return $driver->searchAsController($this->request);
-        }
         return $driver->search($this->request);
     }
 }

@@ -41,20 +41,18 @@ class Elasticsearch extends AbstractSearchDriver
         }
     }
 
-    public function search($data = [])
+    public function search($data)
     {
+        if ($data instanceof Request) {
+            return (new Search)->runAsController($data);
+        }
         return Search::run([
             'type' => $data['type'] ?? 'products',
-            'facets' => $data['filters'] ?? [],
+            'filters' => $data['filters'] ?? [],
             'aggregates' => $data['aggregates'] ?? [],
             'term' => $data['term'] ?? null,
             'language' => $data['language'] ?? app()->getLocale(),
         ]);
-    }
-
-    public function searchAsController(Request $request)
-    {
-        return (new Search)->runAsController($request);
     }
 
     public function config()

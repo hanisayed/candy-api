@@ -39,7 +39,7 @@ class SearchManager extends Manager implements SearchManagerContract
      */
     public function buildProvider($provider)
     {
-        return $this->app->make($provider);
+        return $this->container->make($provider);
     }
 
     /**

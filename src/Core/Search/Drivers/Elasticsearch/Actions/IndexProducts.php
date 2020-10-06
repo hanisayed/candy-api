@@ -83,14 +83,13 @@ class IndexProducts extends Action
 
         foreach ($indexes as $index) {
             // If the index doesn't exist, then we update the mapping
-            if (!$index->actual->exists()) {
+            if (empty($index->actual->getMapping())) {
                 $mapping = new Mapping();
                 $mapping->setProperties(
                     FetchProductMapping::run()
                 );
                 $mapping->send($index->actual);
             }
-
             // Get the documents for the index language.
             $docs = collect($documents[$index->language] ?? [])->map(function ($document) {
                 return new Document($document->getId(), $document->getData());

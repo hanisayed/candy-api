@@ -15,7 +15,7 @@
         "kalnoy/nestedset": "^5.0",
         "laravel/framework": "^7.0|^8.0",
         "ralphschindler/basic-query-filter": "0.1.0",
-        "laravel/ui": "^2.0",
+        "laravel/ui": "^2.0|^3.0",
         "doctrine/dbal": "2.9.2",
         "ruflin/elastica": "^7.0",
         "spatie/laravel-permission": "^3.17",

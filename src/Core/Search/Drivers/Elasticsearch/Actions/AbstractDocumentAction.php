@@ -254,6 +254,7 @@ class AbstractDocumentAction extends Action
             return $payload;
         })->toArray();
 
+
         return array_merge($attributes, $this->mapping);
     }
 }

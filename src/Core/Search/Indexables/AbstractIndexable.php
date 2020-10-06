@@ -73,7 +73,6 @@ abstract class AbstractIndexable
 
                 $this->setIndex($indice);
 
-                dd($indexable);
                 $categories = $this->getCategories();
 
                 $indexable->set('departments', $categories->toArray());
@@ -305,7 +304,6 @@ abstract class AbstractIndexable
 
             return $payload;
         })->toArray();
-
         return $attributes;
     }
 
