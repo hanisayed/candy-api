@@ -2,9 +2,7 @@
 
 namespace GetCandy\Api\Core\Search\Drivers\Elasticsearch\Actions;
 
-use Elastica\Client;
 use Lorisleiva\Actions\Action;
-use GetCandy\Api\Core\Addresses\Models\Address;
 use GetCandy\Api\Core\Search\Drivers\Elasticsearch\Index;
 
 class FetchIndex extends Action
@@ -38,8 +36,10 @@ class FetchIndex extends Action
      *
      * @return \GetCandy\Api\Core\Addresses\Models\Address
      */
-    public function handle(Client $client)
+    public function handle()
     {
+        $client = FetchClient::run();
+
         $indexes = [];
         $prefix = config('getcandy.search.index_prefix', 'getcandy');
         foreach ($this->languages as $language) {

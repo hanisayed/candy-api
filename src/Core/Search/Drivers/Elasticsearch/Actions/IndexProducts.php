@@ -3,17 +3,12 @@
 namespace GetCandy\Api\Core\Search\Drivers\Elasticsearch\Actions;
 
 use Elastica\Bulk;
-use Elastica\Client;
 use Elastica\Document;
 use Elastica\Mapping;
-use GetCandy\Api\Core\Addresses\Models\Address;
 use GetCandy\Api\Core\Customers\Actions\FetchCustomerGroups;
 use GetCandy\Api\Core\Languages\Actions\FetchLanguages;
 use GetCandy\Api\Core\Search\Actions\GetIndiceNamesAction;
-use GetCandy\Api\Core\Search\Drivers\Elasticsearch\Actions\FetchIndex;
-use GetCandy\Api\Core\Search\Drivers\Elasticsearch\Actions\FetchProductMapping;
 use GetCandy\Api\Core\Search\Drivers\Elasticsearch\Events\IndexingCompleteEvent;
-use GetCandy\Api\Core\Search\Indexables\ProductIndexable;
 use Lorisleiva\Actions\Action;
 
 class IndexProducts extends Action
@@ -50,8 +45,10 @@ class IndexProducts extends Action
      *
      * @return \GetCandy\Api\Core\Addresses\Models\Address
      */
-    public function handle(Client $client)
+    public function handle()
     {
+        $client = FetchClient::run();
+
         $languages = FetchLanguages::run([
             'paginate' => false,
         ])->pluck('lang');
