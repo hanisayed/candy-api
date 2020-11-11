@@ -4,8 +4,6 @@ namespace GetCandy\Api\Core\Search\Drivers\Elasticsearch\Actions\Searching;
 
 use Elastica\Client;
 use Lorisleiva\Actions\Action;
-use GetCandy\Api\Core\Addresses\Models\Address;
-use GetCandy\Api\Core\Search\Drivers\Elasticsearch\Index;
 
 class FetchClient extends Action
 {

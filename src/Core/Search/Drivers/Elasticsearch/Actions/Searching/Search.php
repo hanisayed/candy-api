@@ -70,7 +70,6 @@ class Search extends Action
         $term = $this->term ? FetchTerm::run($this->attributes) : null;
         $filters = $this->delegateTo(FetchFilters::class);
 
-
         $query = new Query();
         $query->setParam('size', $this->limit ?: 100);
         $query->setParam('from', $this->offset ?: 0);
@@ -97,11 +96,11 @@ class Search extends Action
             return in_array($filter->handle, $this->topFilters);
         });
 
-        // $preFilters->each(function ($filter) use ($boolQuery) {
-        //     $boolQuery->addFilter(
-        //         $filter->getQuery()
-        //     );
-        // });
+         $preFilters->each(function ($filter) use ($boolQuery) {
+             $boolQuery->addFilter(
+                 $filter->getQuery()
+             );
+         });
 
         $postFilters = $filters->filter(function ($filter) {
             return ! in_array($filter->handle, $this->topFilters);
@@ -136,9 +135,7 @@ class Search extends Action
 
         $query->setQuery($boolQuery);
 
-        // $query->setHighlight(
-        //     $this->highlight()
-        // );
+        $query->setHighlight(config('getcandy.search.highlight') ?? []);
 
         // foreach ($this->sorts as $sort) {
         //     $query->addSort($sort->getMapping(
@@ -169,6 +166,9 @@ class Search extends Action
             }
         }
 
+        // can be empty...
+//        dump($ids);
+
         $models = FetchSearchedIds::run([
             'model' => $this->type == 'products' ? Product::class : Category::class,
             'encoded_ids' => $ids->toArray(),
@@ -188,10 +188,12 @@ class Search extends Action
             $this->page ?: 1
         );
 
+        //dd($result->getQuery());
+
         return (new $resource($paginator))->additional([
             'meta' => [
-                // 'aggregations' => $aggregations,
-                // 'highlight' => $result->getQuery()->getParam('highlight'),
+                'aggregations' => $result->getAggregations(),
+                //'highlight' => $result->getQuery()->getParam('highlight'),
             ],
         ]);
     }

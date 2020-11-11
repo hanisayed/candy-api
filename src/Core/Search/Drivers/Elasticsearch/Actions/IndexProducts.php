@@ -7,7 +7,6 @@ use Elastica\Document;
 use Elastica\Mapping;
 use GetCandy\Api\Core\Customers\Actions\FetchCustomerGroups;
 use GetCandy\Api\Core\Languages\Actions\FetchLanguages;
-use GetCandy\Api\Core\Search\Actions\GetIndiceNamesAction;
 use GetCandy\Api\Core\Search\Drivers\Elasticsearch\Events\IndexingCompleteEvent;
 use Lorisleiva\Actions\Action;
 
@@ -43,7 +42,7 @@ class IndexProducts extends Action
     /**
      * Execute the action and return a result.
      *
-     * @return \GetCandy\Api\Core\Addresses\Models\Address
+     * @return void
      */
     public function handle()
     {
@@ -57,13 +56,11 @@ class IndexProducts extends Action
             'paginate' => false
         ]);
 
-
         $indexes = FetchIndex::run([
             'languages' => $languages->toArray(),
             'type' => 'products',
             'uuid' => $this->uuid,
         ]);
-
 
         $documents = [];
 

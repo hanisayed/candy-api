@@ -32,9 +32,17 @@ class CustomerGroupFilter extends AbstractFilter
         $filter = new BoolQuery;
 
         foreach ($this->getCustomerGroups() as $model) {
+//            $term = new Term;
+//            $term->setTerm('customer_groups.id', $model->encodedId());
+//            $filter->addShould($term);
+            $cat = new Nested;
+            $cat->setPath('customer_groups');
             $term = new Term;
             $term->setTerm('customer_groups.id', $model->encodedId());
-            $filter->addShould($term);
+
+            $cat->setQuery($term);
+
+            $filter->addShould($cat);
         }
 
         return $filter;
@@ -47,7 +55,7 @@ class CustomerGroupFilter extends AbstractFilter
             if ($this->user->hasRole('admin')) {
                 $groups = [];
             } else {
-                $groups = $this->user->groups;
+                $groups = $this->user->customer->customerGroups;
             }
         } else {
             $groups = [FetchDefaultCustomerGroup::run()];

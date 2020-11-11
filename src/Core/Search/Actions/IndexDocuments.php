@@ -3,10 +3,6 @@
 namespace GetCandy\Api\Core\Search\Actions;
 
 use Lorisleiva\Actions\Action;
-use GetCandy\Api\Core\Addresses\Models\Address;
-use GetCandy\Api\Core\Search\Indexables\ProductIndexable;
-use GetCandy\Api\Core\Addresses\Resources\AddressResource;
-use GetCandy\Api\Core\Search\Actions\GetIndiceNamesAction;
 
 class IndexDocuments extends Action
 {
