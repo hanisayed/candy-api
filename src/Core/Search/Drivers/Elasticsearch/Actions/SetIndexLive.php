@@ -2,11 +2,7 @@
 
 namespace GetCandy\Api\Core\Search\Drivers\Elasticsearch\Actions;
 
-use Elastica\Client;
 use Lorisleiva\Actions\Action;
-use GetCandy\Api\Core\Addresses\Models\Address;
-use GetCandy\Api\Core\Languages\Actions\FetchLanguages;
-use GetCandy\Api\Core\Search\Drivers\Elasticsearch\Index;
 
 class SetIndexLive extends Action
 {
@@ -41,8 +37,9 @@ class SetIndexLive extends Action
      *
      * @return \GetCandy\Api\Core\Addresses\Models\Address
      */
-    public function handle(Client $client)
+    public function handle()
     {
+        $client = FetchClient::run();
         dump('Setting live');
         // Indexes
         // $languages = FetchLanguages::run([
@@ -72,7 +69,7 @@ class SetIndexLive extends Action
 
         foreach ($existing as $indexName) {
             $shouldPreserve = $indexesToPreserve->first(function ($index) use ($indexName) {
-                return $index == $indexName;
+                return $index == $indexName || ! str_contains($indexName, $this->type);
             });
 
             if (!$shouldPreserve) {
