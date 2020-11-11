@@ -170,7 +170,9 @@ class AbstractDocumentAction extends Action
     {
         $categories = $model->categories;
 
-        $cats = collect();
+        if (empty($categories)) {
+            return collect([]);
+        }
 
         foreach ($categories as $category) {
             $parent = $category->parent;

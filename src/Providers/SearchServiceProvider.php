@@ -2,6 +2,7 @@
 
 namespace GetCandy\Api\Providers;
 
+use GetCandy\Api\Core\Search\Commands\IndexCategoriesCommand;
 use Illuminate\Support\ServiceProvider;
 use GetCandy\Api\Core\Search\SearchManager;
 use GetCandy\Api\Core\Search\Commands\IndexProductsCommand;
@@ -17,7 +18,8 @@ class SearchServiceProvider extends ServiceProvider
 
         if ($this->app->runningInConsole()) {
             $this->commands([
-                IndexProductsCommand::class
+                IndexProductsCommand::class,
+                IndexCategoriesCommand::class,
             ]);
         }
     }

@@ -3,6 +3,8 @@
 namespace GetCandy\Api\Core\Search\Drivers\Elasticsearch;
 
 use Elastica\Client;
+use GetCandy\Api\Core\Categories\Models\Category;
+use GetCandy\Api\Core\Search\Drivers\Elasticsearch\Actions\IndexCategories;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Contracts\Container\Container;
@@ -32,6 +34,13 @@ class Elasticsearch extends AbstractSearchDriver
             case Product::class:
                 IndexProducts::run([
                     'products' => $documents,
+                    'uuid' => $this->reference,
+                    'final' => $final,
+                ]);
+                break;
+            case Category::class:
+                IndexCategories::run([
+                    'categories' => $documents,
                     'uuid' => $this->reference,
                     'final' => $final,
                 ]);
