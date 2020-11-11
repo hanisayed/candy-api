@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use GetCandy;
 use GetCandy\Api\Core\Attributes\Events\AttributableSavedEvent;
 use GetCandy\Api\Core\Channels\Actions\FetchChannel;
+use GetCandy\Api\Core\Customers\Actions\FetchCustomerGroup;
 use GetCandy\Api\Core\Routes\Actions\SearchForRoute;
 use Illuminate\Database\Eloquent\Model;
 
@@ -384,7 +385,9 @@ abstract class BaseService
     {
         $groupData = [];
         foreach ($groups as $group) {
-            $groupModel = GetCandy::customerGroups()->getByHashedId($group['id']);
+            $groupModel = FetchCustomerGroup::run([
+                'encoded_id' => $group['id'],
+            ]);
             $groupData[$groupModel->id] = [
                 'visible' => $group['visible'],
                 'purchasable' => $group['purchasable'],

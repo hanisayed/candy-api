@@ -4,6 +4,7 @@ namespace GetCandy\Api\Core\Scopes;
 
 use GetCandy;
 use GetCandy\Api\Core\Customers\Actions\FetchDefaultCustomerGroup;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Scope;
 
 abstract class AbstractScope implements Scope
@@ -49,9 +50,6 @@ abstract class AbstractScope implements Scope
      */
     protected function resolve(\Closure $callback)
     {
-        if (app()->runningInConsole()) {
-            return;
-        }
         if (
             ! $this->getUser()
             || ! $this->canAccessHub()
@@ -83,6 +81,15 @@ abstract class AbstractScope implements Scope
         return $user ? $user->hasAnyRole($this->roles) : false;
     }
 
+    protected function filterColumns(Builder $builder, array $incoming)
+    {
+        $existingColumns = $builder->getQuery()->columns ?: [];
+
+        return collect($incoming)->filter(function ($column) use ($existingColumns) {
+            return ! in_array($column, $existingColumns);
+        });
+    }
+
     /**
      * Get the customer groups.
      *
@@ -99,7 +106,7 @@ abstract class AbstractScope implements Scope
         if (($this->canAccessHub() && GetCandy::isHubRequest()) ||
             (! GetCandy::isHubRequest() && ! $this->canAccessHub())
         ) {
-            return $user->groups->pluck('id')->toArray();
+            return $user->customer->customerGroups->pluck('id')->toArray();
         }
 
         return $guestGroups;

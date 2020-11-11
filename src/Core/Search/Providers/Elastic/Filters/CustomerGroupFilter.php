@@ -5,7 +5,7 @@ namespace GetCandy\Api\Core\Search\Providers\Elastic\Filters;
 use Elastica\Query\BoolQuery;
 use Elastica\Query\Nested;
 use Elastica\Query\Term;
-use GetCandy;
+use GetCandy\Api\Core\Customers\Actions\FetchDefaultCustomerGroup;
 
 class CustomerGroupFilter extends AbstractFilter
 {
@@ -53,7 +53,7 @@ class CustomerGroupFilter extends AbstractFilter
                 $groups = $this->user->groups;
             }
         } else {
-            $groups = [GetCandy::customerGroups()->getGuest()];
+            $groups = [FetchDefaultCustomerGroup::run()];
         }
 
         return $groups;

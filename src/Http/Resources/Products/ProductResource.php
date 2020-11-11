@@ -4,6 +4,7 @@ namespace GetCandy\Api\Http\Resources\Products;
 
 use GetCandy\Api\Core\Channels\Resources\ChannelCollection;
 use GetCandy\Api\Core\Customers\Resources\CustomerGroupCollection;
+use GetCandy\Api\Core\Products\Resources\ProductFamilyResource;
 use GetCandy\Api\Http\Resources\AbstractResource;
 use GetCandy\Api\Http\Resources\Assets\AssetCollection;
 use GetCandy\Api\Http\Resources\Assets\AssetResource;
