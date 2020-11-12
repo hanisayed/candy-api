@@ -6,9 +6,7 @@ use Ramsey\Uuid\Uuid;
 use Illuminate\Console\Command;
 use GetCandy\Api\Core\Search\SearchManager;
 use Illuminate\Contracts\Events\Dispatcher;
-use GetCandy\Api\Core\Search\SearchContract;
 use GetCandy\Api\Core\Products\Models\Product;
-use GetCandy\Api\Core\Search\Jobs\ReindexSearchJob;
 use GetCandy\Api\Core\Search\Actions\IndexDocuments;
 
 class IndexProductsCommand extends Command
@@ -40,7 +38,7 @@ class IndexProductsCommand extends Command
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @return void
      */
     public function handle(Dispatcher $events, SearchManager $manager)
     {
@@ -54,8 +52,6 @@ class IndexProductsCommand extends Command
 
         $uuid = Uuid::uuid4()->toString();
 
-        dump('Memory, Used: '. round(memory_get_usage() / 1048576,2) .'mb / Allocated: '. round(memory_get_usage(true) / 1048576,2) .'mb');
-
         Product::withoutGlobalScopes()->with([
             'attributes',
             'customerGroups',
@@ -63,8 +59,6 @@ class IndexProductsCommand extends Command
             'variants.customerPricing',
             'categories',
         ])->chunk($batchsize, function ($products, $index) use ($manager, $uuid, $batches, $bar, $events) {
-            dump('Memory, Used: '. round(memory_get_usage() / 1048576,2) .'mb / Allocated: '. round(memory_get_usage(true) / 1048576,2) .'mb');
-            dump((int) $batches, $index, $batches === $index);
             IndexDocuments::run([
                 'driver' => $manager->with(
                     config('getcandy.search.driver')

@@ -2,8 +2,6 @@
 
 namespace GetCandy\Api\Core\Search\Drivers\Elasticsearch\Actions\Searching;
 
-use Elastica\Client;
-use Elastica\Query\Term;
 use Elastica\Query\DisMax;
 use Elastica\Query\Wildcard;
 use Elastica\Query\MultiMatch;
@@ -37,7 +35,7 @@ class FetchTerm extends Action
     /**
      * Execute the action and return a result.
      *
-     * @return \Elastica\Query\Term
+     * @return \Elastica\Query\DisMax
      */
     public function handle()
     {

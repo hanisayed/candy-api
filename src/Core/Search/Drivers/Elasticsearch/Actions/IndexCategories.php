@@ -3,10 +3,8 @@
 namespace GetCandy\Api\Core\Search\Drivers\Elasticsearch\Actions;
 
 use Elastica\Bulk;
-use Elastica\Client;
 use Elastica\Document;
 use Elastica\Mapping;
-use GetCandy\Api\Core\Addresses\Models\Address;
 use GetCandy\Api\Core\Customers\Actions\FetchCustomerGroups;
 use GetCandy\Api\Core\Languages\Actions\FetchLanguages;
 use GetCandy\Api\Core\Search\Drivers\Elasticsearch\Events\IndexingCompleteEvent;
@@ -58,18 +56,16 @@ class IndexCategories extends Action
             'paginate' => false
         ]);
 
-
         $indexes = FetchIndex::run([
             'languages' => $languages->toArray(),
             'type' => 'categories',
             'uuid' => $this->uuid,
         ]);
 
-
         $documents = [];
 
         foreach ($this->categories as $category) {
-            $indexables = FetchProductDocument::run([
+            $indexables = FetchCategoryDocument::run([
                 'model' => $category,
                 'customer_groups' => $customerGroups
             ]);

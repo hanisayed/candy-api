@@ -34,7 +34,7 @@ class FetchIndex extends Action
     /**
      * Execute the action and return a result.
      *
-     * @return \GetCandy\Api\Core\Addresses\Models\Address
+     * @return array
      */
     public function handle()
     {

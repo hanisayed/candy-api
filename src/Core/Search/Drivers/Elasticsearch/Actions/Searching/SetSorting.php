@@ -2,9 +2,6 @@
 
 namespace GetCandy\Api\Core\Search\Drivers\Elasticsearch\Actions\Searching;
 
-use Elastica\Suggest;
-use Elastica\Suggest\CandidateGenerator\DirectGenerator;
-use Elastica\Suggest\Phrase;
 use GetCandy\Api\Core\Search\Drivers\Elasticsearch\Actions\FetchCategoryMapping;
 use GetCandy\Api\Core\Search\Drivers\Elasticsearch\Actions\FetchProductMapping;
 use GetCandy\Api\Core\Search\Providers\Elastic\Sorts\BasicSort;

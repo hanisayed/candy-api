@@ -50,7 +50,7 @@ class Search extends Action
             'aggregate' => 'nullable|array',
             'term' => 'nullable|string',
             'language' => 'nullable|string',
-            'page' => 'nullable|numeric|min:1'
+            'page' => 'nullable|numeric|min:1',
         ];
     }
 
@@ -179,7 +179,6 @@ class Search extends Action
         if ($this->type == 'category') {
             $resource = CategoryCollection::class;
         }
-
 
         $paginator = new LengthAwarePaginator(
             $models,

@@ -2,7 +2,6 @@
 
 namespace GetCandy\Api\Core\Search\Drivers\Elasticsearch\Actions\Searching;
 
-use Elastica\Query\Term;
 use Lorisleiva\Actions\Action;
 use GetCandy\Api\Core\Attributes\Actions\FetchFilterableAttributes;
 use GetCandy\Api\Core\Search\Drivers\Elasticsearch\Aggregators\Attribute;
@@ -27,14 +26,16 @@ class FetchAggregations extends Action
     public function rules()
     {
         return [
-            'aggregate' => 'array|min:0'
+            'aggregate' => 'array|min:0',
         ];
     }
 
     /**
      * Execute the action and return a result.
      *
-     * @return \Elastica\Query\Term
+     * @return array|null
+     *
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public function handle()
     {

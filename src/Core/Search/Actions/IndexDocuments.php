@@ -37,7 +37,7 @@ class IndexDocuments extends Action
     /**
      * Execute the action and return a result.
      *
-     * @return \GetCandy\Api\Core\Addresses\Models\Address
+     * @return void
      */
     public function handle()
     {
