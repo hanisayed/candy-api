@@ -194,5 +194,17 @@ return [
                 ],
             ],
         ],
+        'highlight' => [
+            'pre_tags' => ['<em class="highlight">'],
+            'post_tags' => ['</em>'],
+            'fields' => [
+                'name' => [
+                    'number_of_fragments' => 0,
+                ],
+                'description' => [
+                    'number_of_fragments' => 0,
+                ],
+            ],
+        ],
     ],
 ];

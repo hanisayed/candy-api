@@ -1,11 +1,11 @@
 <?php
 
-namespace GetCandy\Api\Core\Search\Drivers\Elasticsearch\Actions;
+namespace GetCandy\Api\Core\Attributes\Actions;
 
-use GetCandy\Api\Core\Search\Indexables\CategoryIndexable;
-use Lorisleiva\Actions\Action;
+use GetCandy\Api\Core\Attributes\Models\Attribute;
+use GetCandy\Api\Core\Scaffold\AbstractAction;
 
-class FetchCategoryMapping extends Action
+class FetchAttributes extends AbstractAction
 {
     /**
      * Determine if the user is authorized to make this action.
@@ -14,10 +14,6 @@ class FetchCategoryMapping extends Action
      */
     public function authorize()
     {
-//        if (app()->runningInConsole()) {
-//            return true;
-//        }
-//        return $this->user()->can('index-documents');
         return true;
     }
 
@@ -34,10 +30,10 @@ class FetchCategoryMapping extends Action
     /**
      * Execute the action and return a result.
      *
-     * @return array
+     * @return \GetCandy\Api\Core\Attributes\Models\Attribute
      */
     public function handle()
     {
-        return (new CategoryIndexable)->getMapping();
+        return Attribute::get();
     }
 }

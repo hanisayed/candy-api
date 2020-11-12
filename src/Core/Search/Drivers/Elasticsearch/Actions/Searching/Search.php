@@ -78,16 +78,16 @@ class Search extends Action
 
         if ($term) {
             $boolQuery->addMust($term);
-            // $query->setSuggest(
-            //     $this->getSuggest()
-            // );
+
+            $query = SetSuggestion::run([
+                'query' => $query,
+                'term' => $this->term,
+            ]);
         }
 
-        $aggregations = $this->delegateTo(FetchAggregations::class);
+        $aggregations = $this->delegateTo(FetchAggregations::class) ?? [];
 
-        // $query->setSource(
-        //     $this->getExcludedFields()
-        // );
+        $query = SetExcludedFields::run(['query' => $query]);
 
         // Set filters as post filters
         $postFilter = new BoolQuery;
@@ -122,26 +122,26 @@ class Search extends Action
         $query->setPostFilter($postFilter);
 
         // // $globalAggregation = new \Elastica\Aggregation\GlobalAggregation('all_products');
-        // foreach ($this->aggregations as $agg) {
-        //     if (method_exists($agg, 'get')) {
-        //         $query->addAggregation(
-        //             $agg->addFilters($postFilters)->get($postFilters)
-        //         );
-        //         // $globalAggregation->addAggregation(
-        //             // $agg->addFilters($postFilters)->get($postFilters)
-        //         // );
-        //     }
-        // }
+         foreach ($aggregations as $aggregation) {
+             if (method_exists($aggregation, 'get')) {
+                 $query->addAggregation(
+                     $aggregation->addFilters($postFilters)->get($postFilters)
+                 );
+                 // $globalAggregation->addAggregation(
+                     // $agg->addFilters($postFilters)->get($postFilters)
+                 // );
+             }
+         }
 
         $query->setQuery($boolQuery);
 
         $query->setHighlight(config('getcandy.search.highlight') ?? []);
 
-        // foreach ($this->sorts as $sort) {
-        //     $query->addSort($sort->getMapping(
-        //         $this->user
-        //     ));
-        // }
+        $query = SetSorting::run([
+            'query' => $query,
+            'type' => $this->type,
+            'sort' => $this->sort,
+        ]);
 
         $search = new ElasticaSearch($client);
 
@@ -193,7 +193,7 @@ class Search extends Action
         return (new $resource($paginator))->additional([
             'meta' => [
                 'aggregations' => $result->getAggregations(),
-                //'highlight' => $result->getQuery()->getParam('highlight'),
+                'highlight' => $result->getQuery()->getParam('highlight'),
             ],
         ]);
     }
