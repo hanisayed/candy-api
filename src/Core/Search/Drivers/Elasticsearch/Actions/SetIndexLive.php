@@ -16,6 +16,7 @@ class SetIndexLive extends Action
         if (app()->runningInConsole()) {
             return true;
         }
+
         return $this->user()->can('index-documents');
     }
 
@@ -35,7 +36,7 @@ class SetIndexLive extends Action
     /**
      * Execute the action and return a result.
      *
-     * @return \GetCandy\Api\Core\Addresses\Models\Address
+     * @return void
      */
     public function handle()
     {
@@ -51,9 +52,8 @@ class SetIndexLive extends Action
         $prefix = config('getcandy.search.index_prefix');
 
         // Get index names....
-
         $existing = collect($client->getStatus()->getIndexNames())->filter(function ($indexName) use ($prefix) {
-            return strpos($indexName, "{$prefix}_{$this->type}") !== null;
+            return strpos($indexName, "{$prefix}_{$this->type}") !== false;
         });
 
         foreach ($this->indexes as $index) {
@@ -68,8 +68,8 @@ class SetIndexLive extends Action
         });
 
         foreach ($existing as $indexName) {
-            $shouldPreserve = $indexesToPreserve->first(function ($index) use ($indexName) {
-                return $index == $indexName || ! str_contains($indexName, $this->type);
+            $shouldPreserve = $indexesToPreserve->first(function ($index) use ($indexName, $prefix) {
+                return $index == $indexName;
             });
 
             if (!$shouldPreserve) {
@@ -77,8 +77,6 @@ class SetIndexLive extends Action
                 $index->delete();
             }
         }
-
-
 
         // foreach ($languages as $lang) {
         //     // Does the alias exist? if not create it.

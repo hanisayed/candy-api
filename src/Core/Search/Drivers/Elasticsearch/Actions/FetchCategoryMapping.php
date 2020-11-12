@@ -14,10 +14,6 @@ class FetchCategoryMapping extends Action
      */
     public function authorize()
     {
-//        if (app()->runningInConsole()) {
-//            return true;
-//        }
-//        return $this->user()->can('index-documents');
         return true;
     }
 
@@ -34,7 +30,7 @@ class FetchCategoryMapping extends Action
     /**
      * Execute the action and return a result.
      *
-     * @return array
+     * @return mixed
      */
     public function handle()
     {

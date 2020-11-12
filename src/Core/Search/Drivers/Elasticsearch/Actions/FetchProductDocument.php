@@ -26,14 +26,14 @@ class FetchProductDocument extends AbstractDocumentAction
     {
         return [
             'model' => 'required',
-            'customer_groups' => 'required'
+            'customer_groups' => 'required',
         ];
     }
 
     /**
      * Execute the action and return a result.
      *
-     * @return array
+     * @return mixed
      */
     public function handle()
     {

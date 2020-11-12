@@ -6,7 +6,6 @@ use Lorisleiva\Actions\Action;
 use GetCandy\Api\Core\Search\Document;
 use Illuminate\Database\Eloquent\Model;
 
-
 class AbstractDocumentAction extends Action
 {
     /**

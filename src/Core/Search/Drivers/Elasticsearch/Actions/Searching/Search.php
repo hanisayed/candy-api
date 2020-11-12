@@ -155,6 +155,12 @@ class Search extends Action
             )->search($query);
     }
 
+    /**
+     * @param $result
+     * @param $request
+     *
+     * @return CategoryCollection|ProductCollection
+     */
     public function jsonResponse($result, $request)
     {
         $ids = collect();
@@ -165,9 +171,6 @@ class Search extends Action
                 $ids->push($r->getId());
             }
         }
-
-        // can be empty...
-//        dump($ids);
 
         $models = FetchSearchedIds::run([
             'model' => $this->type == 'products' ? Product::class : Category::class,
@@ -186,8 +189,6 @@ class Search extends Action
             $result->getQuery()->getParam('size'),
             $this->page ?: 1
         );
-
-        //dd($result->getQuery());
 
         return (new $resource($paginator))->additional([
             'meta' => [
