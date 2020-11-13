@@ -4,7 +4,9 @@ namespace GetCandy\Api\Core\Search\Drivers\Elasticsearch;
 
 use Elastica\Client;
 use GetCandy\Api\Core\Categories\Models\Category;
+use GetCandy\Api\Core\Search\Drivers\Elasticsearch\Actions\FetchClient;
 use GetCandy\Api\Core\Search\Drivers\Elasticsearch\Actions\IndexCategories;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Contracts\Container\Container;
@@ -50,11 +52,33 @@ class Elasticsearch extends AbstractSearchDriver
         }
     }
 
+    public function update($documents)
+    {
+        if (! $documents instanceof Collection) {
+            $documents = collect([$documents]);
+        }
+
+        $client = FetchClient::run();
+
+        $prefix = config('getcandy.search.index_prefix');
+
+        $type = get_class($documents->first()) == Product::class ? 'products' : 'categories';
+
+        $existing = collect($client->getStatus()->getIndexNames())->filter(function ($indexName) use ($prefix, $type) {
+            return strpos($indexName, "{$prefix}_{$type}") !== false;
+        });
+
+        $reference = substr($existing->first(), strrpos($existing->first(), '_') + 1);
+
+        $this->onReference($reference)->index($documents, false);
+    }
+
     public function search($data)
     {
         if ($data instanceof Request) {
             return (new Search)->runAsController($data);
         }
+
         return Search::run([
             'type' => $data['type'] ?? 'products',
             'filters' => $data['filters'] ?? [],

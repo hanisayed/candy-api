@@ -19,10 +19,13 @@ class IndexProducts extends Action
      */
     public function authorize()
     {
-        if (app()->runningInConsole()) {
-            return true;
-        }
-        return $this->user()->can('index-documents');
+        return true;
+//
+//        if (app()->runningInConsole()) {
+//            return true;
+//        }
+//
+//        return $this->user()->can('index-documents');
     }
 
     /**

@@ -3,9 +3,9 @@
 namespace GetCandy\Api\Core\Search\Actions;
 
 use Lorisleiva\Actions\Action;
-use GetCandy\Api\Core\Search\Contracts\SearchManagerContract;
+use GetCandy\Api\Core\Search\SearchManager;
 
-class Search extends Action
+class IndexObjects extends Action
 {
     /**
      * Determine if the user is authorized to make this action.
@@ -25,19 +25,19 @@ class Search extends Action
     public function rules()
     {
         return [
-            'driver' => 'nullable',
-            'params' => 'nullable|array',
+            'documents' => 'required',
         ];
     }
 
     /**
      * Execute the action and return a result.
      *
-     * @return \GetCandy\Api\Core\Addresses\Models\Address
+     * @return void
      */
-    public function handle(SearchManagerContract $search)
+    public function handle(SearchManager $manager)
     {
-        $driver = $search->with($this->driver);
-        return $driver->search($this->request ?? $this->params);
+        $driver = $manager->with(config('getcandy.search.driver'));
+
+        $driver->update($this->documents);
     }
 }

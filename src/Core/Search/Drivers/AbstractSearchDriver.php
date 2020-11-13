@@ -21,6 +21,8 @@ abstract class AbstractSearchDriver
 
     abstract function index($documents, $final = false);
 
+    abstract function update($documents);
+
     /**
      * Checks if a feature is available for this driver
      *
