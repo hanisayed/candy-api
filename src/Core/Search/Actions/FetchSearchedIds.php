@@ -2,12 +2,12 @@
 
 namespace GetCandy\Api\Core\Search\Actions;
 
-use Lorisleiva\Actions\Action;
+use GetCandy\Api\Core\Scaffold\AbstractAction;
 use GetCandy\Api\Core\Addresses\Models\Address;
 use GetCandy\Api\Core\Foundation\Actions\DecodeIds;
 use GetCandy\Api\Core\Search\Contracts\SearchManagerContract;
 
-class FetchSearchedIds extends Action
+class FetchSearchedIds extends AbstractAction
 {
     /**
      * Determine if the user is authorized to make this action.
@@ -29,7 +29,7 @@ class FetchSearchedIds extends Action
         return [
             'model' => 'required',
             'encoded_ids' => 'array|min:0',
-            'includes' => 'array|min:0'
+            'include' => 'nullable',
         ];
     }
 
@@ -44,7 +44,7 @@ class FetchSearchedIds extends Action
         $parsedIds = $this->delegateTo(DecodeIds::class);
         $placeholders = implode(',', array_fill(0, count($parsedIds), '?')); // string for the query
 
-        $query = $model->with($this->includes ?? [])->whereIn("{$model->getTable()}.id", $parsedIds);
+        $query = $model->with($this->resolveEagerRelations())->whereIn("{$model->getTable()}.id", $parsedIds);
 
         if (count($parsedIds)) {
             $query = $query->orderByRaw("field({$model->getTable()}.id,{$placeholders})", $parsedIds);
