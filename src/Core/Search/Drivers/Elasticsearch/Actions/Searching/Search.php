@@ -189,12 +189,12 @@ class Search extends Action
             }
         }
 
+
         $models = FetchSearchedIds::run([
             'model' => $this->search_type == 'products' ? Product::class : Category::class,
             'encoded_ids' => $ids->toArray(),
             'include' => $request->include,
         ]);
-
 
         $resource = ProductCollection::class;
 
