@@ -184,6 +184,7 @@ class Search extends Action
         $models = FetchSearchedIds::run([
             'model' => $this->type == 'products' ? Product::class : Category::class,
             'encoded_ids' => $ids->toArray(),
+            'include' => $request->include,
         ]);
 
 
