@@ -2,10 +2,9 @@
 
 namespace GetCandy\Api\Core\Search\Actions;
 
+use Lorisleiva\Actions\Action;
 use GetCandy\Api\Core\Scaffold\AbstractAction;
-use GetCandy\Api\Core\Addresses\Models\Address;
 use GetCandy\Api\Core\Foundation\Actions\DecodeIds;
-use GetCandy\Api\Core\Search\Contracts\SearchManagerContract;
 
 class FetchSearchedIds extends AbstractAction
 {
@@ -36,7 +35,7 @@ class FetchSearchedIds extends AbstractAction
     /**
      * Execute the action and return a result.
      *
-     * @return \GetCandy\Api\Core\Addresses\Models\Address
+     * @return \Illuminate\Database\Eloquent\Collection
      */
     public function handle()
     {
@@ -44,7 +43,7 @@ class FetchSearchedIds extends AbstractAction
         $parsedIds = $this->delegateTo(DecodeIds::class);
         $placeholders = implode(',', array_fill(0, count($parsedIds), '?')); // string for the query
 
-        $query = $model->with($this->resolveEagerRelations())->whereIn("{$model->getTable()}.id", $parsedIds);
+            $query = $model->with($this->resolveEagerRelations())->whereIn("{$model->getTable()}.id", $parsedIds);
 
         if (count($parsedIds)) {
             $query = $query->orderByRaw("field({$model->getTable()}.id,{$placeholders})", $parsedIds);

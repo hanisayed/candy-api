@@ -111,10 +111,10 @@ class Attribute
 
         $postBool = new BoolQuery();
 
-        foreach ($value as $value) {
+        foreach ($value as $item) {
             $match = new Match;
             $match->setFieldAnalyzer($this->field, 'standard');
-            $match->setFieldQuery($this->field, $value);
+            $match->setFieldQuery($this->field, $item);
             $postBool->addShould($match);
         }
 
