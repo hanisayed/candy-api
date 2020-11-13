@@ -28,7 +28,7 @@ class FetchTerm extends Action
     {
         return [
             'term' => 'nullable|string',
-            'type' => 'required',
+            'search_type' => 'required',
         ];
     }
 
@@ -39,7 +39,7 @@ class FetchTerm extends Action
      */
     public function handle()
     {
-        $ranking = config("getcandy.elastic.ranking.{$this->type}", []);
+        $ranking = config("getcandy.elastic.ranking.{$this->search_type}", []);
 
         $disMaxQuery = new DisMax;
         $disMaxQuery->setBoost(1.5);

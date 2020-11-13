@@ -80,7 +80,7 @@ class Elasticsearch extends AbstractSearchDriver
         }
 
         return Search::run([
-            'type' => $data['type'] ?? 'products',
+            'search_type' => $data['type'] ?? 'products',
             'filters' => $data['filters'] ?? [],
             'aggregates' => $data['aggregates'] ?? [],
             'term' => $data['term'] ?? null,

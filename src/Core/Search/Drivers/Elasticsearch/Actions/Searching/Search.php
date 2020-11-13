@@ -45,7 +45,7 @@ class Search extends Action
             'index' => 'nullable|string',
             'limit' => 'nullable|numeric',
             'offset' => 'nullable|numeric',
-            'type' => 'nullable|string',
+            'search_type' => 'nullable|string',
             'filters' => 'nullable|array',
             'aggregate' => 'nullable|array',
             'term' => 'nullable|string',
@@ -60,7 +60,15 @@ class Search extends Action
      */
     public function handle()
     {
-        $this->set('type', $this->type ?: 'products');
+        $this->set('search_type', $this->search_type ?: 'products');
+
+        if (! $this->index) {
+            $prefix = config('getcandy.search.index_prefix');
+            $language = app()->getLocale();
+
+            $this->set('index', "{$prefix}_{$this->search_type}_{$language}");
+        }
+
         $this->filters = $this->filters ?: [];
         $this->aggregates = $this->aggregates ?: [];
         $this->language = $this->language ?: app()->getLocale();
@@ -137,7 +145,7 @@ class Search extends Action
 
         $query = SetSorting::run([
             'query' => $query,
-            'type' => $this->type,
+            'type' => $this->search_type,
             'sort' => $this->sort,
         ]);
 
@@ -182,14 +190,14 @@ class Search extends Action
         }
 
         $models = FetchSearchedIds::run([
-            'model' => $this->type == 'products' ? Product::class : Category::class,
+            'model' => $this->search_type == 'products' ? Product::class : Category::class,
             'encoded_ids' => $ids->toArray(),
         ]);
 
 
         $resource = ProductCollection::class;
 
-        if ($this->type == 'category') {
+        if ($this->search_type == 'categories') {
             $resource = CategoryCollection::class;
         }
 
