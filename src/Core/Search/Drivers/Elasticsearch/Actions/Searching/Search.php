@@ -135,12 +135,21 @@ class Search extends Action
 
         $query->setQuery($boolQuery);
 
-        $query->setHighlight(config('getcandy.search.highlight') ?? []);
-
         $query = SetSorting::run([
             'query' => $query,
             'type' => $this->type,
             'sort' => $this->sort,
+        ]);
+
+        $query->setHighlight(config('getcandy.search.highlight') ?? [
+            'pre_tags' => ['<em class="highlight">'],
+            'post_tags' => ['</em>'],
+            'fields' => [
+                '*' => [
+                    'fragment_size' => 200,
+                    'number_of_fragments' => 50,
+                ],
+            ],
         ]);
 
         $search = new ElasticaSearch($client);
@@ -177,6 +186,7 @@ class Search extends Action
             'encoded_ids' => $ids->toArray(),
         ]);
 
+
         $resource = ProductCollection::class;
 
         if ($this->type == 'category') {
@@ -189,7 +199,6 @@ class Search extends Action
             $result->getQuery()->getParam('size'),
             $this->page ?: 1
         );
-
         return (new $resource($paginator))->additional([
             'meta' => [
                 'aggregations' => $result->getAggregations(),

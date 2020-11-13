@@ -47,7 +47,7 @@ class Attribute
             $filters = collect($filters);
         }
         $filters->filter(function ($f) {
-            return $this->field != $f['filter']->getField();
+            return $this->field != $f->getField();
         })->each(function ($f) {
             $this->addFilter($f);
         });
@@ -66,7 +66,7 @@ class Attribute
         $postBool = new BoolQuery();
 
         foreach ($this->filters as $filter) {
-            $postBool->addMust($filter['filter']->getQuery());
+            $postBool->addMust($filter->getQuery());
         }
 
         $filterAgg->setFilter($postBool);
