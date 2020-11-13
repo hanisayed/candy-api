@@ -39,7 +39,7 @@ class FetchTerm extends Action
      */
     public function handle()
     {
-        $ranking = config("getcandy.elastic.ranking.{$this->search_type}", []);
+        $ranking = config("getcandy.search.ranking.{$this->search_type}", []);
 
         $disMaxQuery = new DisMax;
         $disMaxQuery->setBoost(1.5);
