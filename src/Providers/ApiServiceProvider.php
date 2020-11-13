@@ -2,9 +2,7 @@
 
 namespace GetCandy\Api\Providers;
 
-use GetCandy\Api\Console\Commands\CandySearchIndexCommand;
 use GetCandy\Api\Console\Commands\InstallGetCandyCommand;
-use GetCandy\Api\Console\Commands\ScoreProductsCommand;
 use GetCandy\Api\Core\Currencies\CurrencyConverter;
 use GetCandy\Api\Core\Factory;
 use GetCandy\Api\Core\GetCandy;
@@ -146,7 +144,6 @@ class ApiServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->commands([
                 InstallGetCandyCommand::class,
-                ScoreProductsCommand::class,
             ]);
         }
     }

@@ -3,6 +3,7 @@
 namespace GetCandy\Api\Providers;
 
 use GetCandy\Api\Core\Search\Commands\IndexCategoriesCommand;
+use GetCandy\Api\Core\Search\Commands\ScoreProductsCommand;
 use Illuminate\Support\ServiceProvider;
 use GetCandy\Api\Core\Search\SearchManager;
 use GetCandy\Api\Core\Search\Commands\IndexProductsCommand;
@@ -20,6 +21,7 @@ class SearchServiceProvider extends ServiceProvider
             $this->commands([
                 IndexProductsCommand::class,
                 IndexCategoriesCommand::class,
+                ScoreProductsCommand::class,
             ]);
         }
     }
